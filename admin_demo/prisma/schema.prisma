@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model pod {
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  url            String
+  identification String
+  username       String
+  password       String
+  created_date   DateTime      @default(now()) @db.Timestamptz(6)
+  update_date    DateTime      @default(now()) @db.Timestamptz(6)
+  deleted_at     DateTime?     @db.Timestamp(6)
+}
+
+model experiences {
+  id                String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  link_class        String
+  icon_class        String
+  icon_name         String
+  menu_name         String
+  information       String?
+  active            Boolean             @default(true)
+  created_date      DateTime            @default(now()) @db.Timestamptz(6)
+  update_date       DateTime            @default(now()) @db.Timestamptz(6)
+  deleted_at        DateTime?           @db.Timestamp(6)
+  detail_experience detail_experience[]
+
+  @@index([id], map: "experience_idx")
+}
+
+model detail_experience {
+  id                              String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  stroboscopic_light              Int         @db.SmallInt
+  audio_surround_sound            Int         @db.SmallInt
+  vibro_acoustics                 Int         @db.SmallInt
+  led_intensity                   Int         @db.SmallInt
+  led_color                       Int         @db.SmallInt
+  sound_scape                     Int
+  infra_red_nea_ir                Int         @db.SmallInt
+  infra_red_far_ir                Int         @db.SmallInt
+  pemf_therapy                    Boolean
+  olfactory_engagement            Boolean
+  binaural_beats_isochronic_tones Boolean
+  direct_neutral_stimulation      Boolean
+  duration                        Decimal     @db.Decimal(5, 2)
+  created_at                      DateTime    @default(now()) @db.Timestamptz(6)
+  updated_at                      DateTime    @default(now()) @db.Timestamptz(6)
+  deleted_at                      DateTime?   @db.Timestamptz(6)
+  experience_id                   String      @db.Uuid
+  experiences                     experiences @relation(fields: [experience_id], references: [id])
+
+  @@index([id], map: "detail_experience_idx")
+}
+
+model upload {
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  test           String
+  fileName       String
+
+  created_date   DateTime      @default(now()) @db.Timestamptz(6)
+  update_date    DateTime      @default(now()) @db.Timestamptz(6)
+  deleted_at     DateTime?     @db.Timestamp(6)
+}
