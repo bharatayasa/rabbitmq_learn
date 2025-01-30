@@ -28,6 +28,19 @@ app.get("/pods/query", async (req, res) => {
 
     app.use('/', routes);
 
+    app.get('/', (req: Request, res: Response) => {
+        try {
+            res.status(200).json({
+                message: "hallo from backend admin demo"
+            })
+        } catch (error) {
+            res.status(500).json({
+                error: 'Internal Server Error',
+                message: error,
+            });
+        }
+    })
+
     app.use((req: Request, res: Response) => {
         res.status(404).json({
             error: 'Route not found',
@@ -42,8 +55,9 @@ app.get("/pods/query", async (req, res) => {
         });
     });
 
-    const PORT = 3001;
+    const PORT = 3002;
+    const HOST = '0.0.0.0'
     app.listen(PORT, () => {
-        console.log(`Server is running at http://localhost:${PORT}`);
+        console.log(`Server is running at http://${HOST}:${PORT}`);
     });
 })();
